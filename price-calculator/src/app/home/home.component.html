@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-sm-3">
+      <div *ngFor="let product of availableProducts" class="col-sm-3">
+        <app-price-card
+            [itemId] = product.id
+            [itemName] = product.productName
+            [itemUrl] = product.imageUrl
+            [itemCartonPrice] = product.cartonPrice
+            [itemUnitPrice] = product.unitPrice
+            (outputValue)="getSelectedDetails($event)"
+        ></app-price-card> <br>
+      </div> 
+  </div> 
+  <div class="col-sm-9">
+      <table class="table table-responsive">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Name</th>
+              <th scope="col">Carton</th>
+              <th scope="col">Units</th>
+              <th scope="col">Price</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cell of availableCells">
+              <td>
+                <img [src]="cell.itemURL" style="border-radius: 50%;" width="50" height="50">
+              </td>
+              <td>{{cell.itemName}}</td>
+              <td>{{cell.cartonAmount}}</td>
+              <td>{{cell.unitAmount}}</td>
+              <td>$ {{cell.price}}</td>
+              <td>
+                <button class="btn btn-danger" (click)="remove(cell.itemNumber)">
+                  X
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="availableCells.length != 0">
+            <td><b>Total price</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <b>$ {{totalPrice}}</b></td>
+          </tfoot>
+        </table>  
+  </div>
+</div>
