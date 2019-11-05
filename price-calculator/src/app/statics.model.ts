@@ -4,7 +4,10 @@ export class Statics {
 
     static TOKEN: string;
     //api
-    static API: string = environment.BACKEND_API + "/api"
+    static API: string = environment.BACKEND_API + "/api";
+
+    //auth
+    static AUTH:string = environment.BACKEND_API + "/auth";
 
     // price urls
     static PRICE: string = Statics.API + "/prices";
@@ -13,4 +16,7 @@ export class Statics {
     static PRICE_UPDATE: string = Statics.PRICE + "/update";
     static PRICE_DELETE: string = Statics.PRICE + "/delete";
     static PRICe_CALCULATE: string = Statics.PRICE + "/calculate";
+
+    //authonticate
+    static AUTHONTICATE: string = Statics.AUTH + "/authenticate";
 }

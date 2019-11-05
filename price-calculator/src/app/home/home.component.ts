@@ -1,16 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../base.service';
 import { Statics } from '../statics.model';
-import { Product } from '../models/product.model';
-
-class tableCell {
-  itemNumber: number;
-  itemName: string;
-  itemURL: string;
-  cartonAmount: number;
-  unitAmount: number;
-  price: number;
-}
+import { Product, TableCell } from '../models/product.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -20,13 +12,21 @@ class tableCell {
 export class HomeComponent implements OnInit {
 
   availableProducts:Array<Product>;
-  availableCells: Array<tableCell>;
+  availableCells: Array<TableCell>;
+  updateProduct: Product;
   totalPrice: number;
+  isLogedToSystem: boolean;
+  username: string ;
+  password: string;
 
-  constructor(private service: BaseService) {
+  constructor(private service: BaseService, private modalService: NgbModal) {
     this.availableProducts = new Array<Product>();
-    this.availableCells = new Array<tableCell>();
+    this.availableCells = new Array<TableCell>();
+    this.isLogedToSystem = false;
     this.totalPrice = 0.0;
+    this.username = null;
+    this.password = null;
+    this.updateProduct = new Product();
   }
 
   ngOnInit() {
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
 
   getSelectedDetails(value) {
     let availableRows = this.availableCells.length;
-    let newCell = new tableCell();
+    let newCell = new TableCell();
     newCell.itemNumber = availableRows + 1;
     newCell.cartonAmount = value.cartonAmount;
     newCell.itemName = value.itemName;
@@ -75,4 +75,38 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  login(content) {
+    this.modalService.open(content);
+  }
+
+  loginToSystem() {
+    if(this.username == null || this.password == null) {
+      alert("Please provide both user name and password");
+    } else {
+      this.service.post(Statics.AUTHONTICATE, false, {
+        username: this.username,
+        password: this.password
+      }).subscribe(response => {
+        sessionStorage.setItem("token", response.token);
+        this.isLogedToSystem = true;
+        this.modalService.dismissAll();
+      }, err => {
+        this.modalService.dismissAll();
+        alert("Your login is unsuccess");
+      })
+    }
+  }
+
+  preUpdate(product: Product, content) {
+    this.updateProduct = product;
+    this.modalService.open(content);
+  }
+
+  updateProductAction() {
+    this.service.put(Statics.PRICE_UPDATE + "/" + this.updateProduct.id, true, this.updateProduct).subscribe(response => {
+      this.modalService.dismissAll();
+    }, err => {
+      console.log(err);
+    })
+  }
 }

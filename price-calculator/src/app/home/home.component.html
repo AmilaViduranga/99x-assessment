@@ -1,6 +1,8 @@
+<button *ngIf="isLogedToSystem == false" class="btn btn-success" (click)="login(content)">Change Price</button><br><br/>
 <div class="row">
-  <div class="col-sm-3">
-      <div *ngFor="let product of availableProducts" class="col-sm-3">
+  <div class="col-sm-6">
+    <div class="row">
+      <div class="col-sm" *ngFor="let product of availableProducts">
         <app-price-card
             [itemId] = product.id
             [itemName] = product.productName
@@ -9,43 +11,139 @@
             [itemUnitPrice] = product.unitPrice
             (outputValue)="getSelectedDetails($event)"
         ></app-price-card> <br>
-      </div> 
-  </div> 
-  <div class="col-sm-9">
-      <table class="table table-responsive">
+      </div>
+    </div>
+    <div *ngIf="isLogedToSystem">
+      <div class="row">
+        <table class="table table-responsive">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">Item</th>
-              <th scope="col">Name</th>
-              <th scope="col">Carton</th>
-              <th scope="col">Units</th>
-              <th scope="col">Price</th>
+              <th scope="col">product</th>
+              <th scope="col">name</th>
+              <th scope="col">carton price</th>
+              <th scope="col">units for carton</th>
+              <th scope="col">unit price</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cell of availableCells">
+            <tr *ngFor="let product of availableProducts">
               <td>
-                <img [src]="cell.itemURL" style="border-radius: 50%;" width="50" height="50">
+                <img [src]="product.imageUrl" style="border-radius: 50%;" width="50" height="50">
               </td>
-              <td>{{cell.itemName}}</td>
-              <td>{{cell.cartonAmount}}</td>
-              <td>{{cell.unitAmount}}</td>
-              <td>$ {{cell.price}}</td>
+              <td>{{product.productName}}</td>
+              <td>{{product.cartonPrice}}</td>
+              <td>{{product.unitsOfCarton}}</td>
+              <td>{{product.unitPrice}}</td>
               <td>
-                <button class="btn btn-danger" (click)="remove(cell.itemNumber)">
-                  X
-                </button>
+                <button class="btn btn-primary" (click)="preUpdate(product, update)">Edit</button>
               </td>
             </tr>
           </tbody>
-          <tfoot *ngIf="availableCells.length != 0">
-            <td><b>Total price</b></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <b>$ {{totalPrice}}</b></td>
-          </tfoot>
-        </table>  
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="row">
+      <table class="table table-responsive" *ngIf="availableCells.length != 0">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Name</th>
+            <th scope="col">Carton</th>
+            <th scope="col">Units</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cell of availableCells">
+            <td>
+              <img [src]="cell.itemURL" style="border-radius: 50%;" width="50" height="50">
+            </td>
+            <td>{{cell.itemName}}</td>
+            <td>{{cell.cartonAmount}}</td>
+            <td>{{cell.unitAmount}}</td>
+            <td>$ {{cell.price}}</td>
+            <td>
+              <button class="btn btn-danger" (click)="remove(cell.itemNumber)">
+                X
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="availableCells.length != 0">
+          <td><b>Total price</b></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td> <b>$ {{totalPrice}}</b></td>
+        </tfoot>
+      </table>
+    </div> 
   </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Login as Admin</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="exampleInputEmail1">User Name</label>
+      <input type="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your User name" [(ngModel)]="username">
+      <small id="emailHelp" class="form-text text-muted">Provide your user name to login</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Password</label>
+      <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your password" [(ngModel)]="password">
+      <small id="emailHelp" class="form-text text-muted">Provide your password to login</small>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="loginToSystem()">login</button>
+  </div>
+</ng-template>
+
+<ng-template #update let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="exampleInputEmail1">Product Name</label>
+      <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Product name" [(ngModel)]="updateProduct.productName">
+      <small id="emailHelp" class="form-text text-muted">Provide suitable product name to display</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Product Image</label>
+      <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Your product image" [(ngModel)]="updateProduct.imageUrl">
+      <small id="emailHelp" class="form-text text-muted">Provide your product image url only</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Carton Price</label>
+      <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Carton Price" [(ngModel)]="updateProduct.cartonPrice">
+      <small id="emailHelp" class="form-text text-muted">Carton price for the product</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Unit for Carton</label>
+      <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Unit for Carton" [(ngModel)]="updateProduct.unitsOfCarton">
+      <small id="emailHelp" class="form-text text-muted">Units included for single carton</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Unit Price</label>
+      <input type="number" class="form-control" id="exampleInputEmail1" placeholder="product unit price" [(ngModel)]="updateProduct.unitPrice">
+      <small id="emailHelp" class="form-text text-muted">price for the single unit of product</small>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="updateProductAction()">update</button>
+  </div>
+</ng-template>
