@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { BaseService } from '../base.service';
-import { Statics } from '../statics.model';
+/*
+ * This component is the base component that display the details of the products, admin behaviour etc
+ */
+import { Component, OnInit }  from '@angular/core';
+import { BaseService }        from '../base.service';
+import { Statics }            from '../statics.model';
 import { Product, TableCell } from '../models/product.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal }           from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +36,11 @@ export class HomeComponent implements OnInit {
     this.getAvailableProducts();
   }
 
+  /*
+   * description:- get all the available products in remote service
+   * output     :- set all the available products to the availableProducts array
+   * developed by:- Amila Viduranga
+   */
   getAvailableProducts() {
     this.availableProducts = [];
     this.service.get(Statics.PRICE_GET, false).subscribe(response => {
@@ -46,9 +54,17 @@ export class HomeComponent implements OnInit {
         newProduct.unitsOfCarton = product.unitsOfCarton;
         this.availableProducts.push(newProduct);
       })
+    }, err => {
+      console.log(err);
     })
   }
 
+  /*
+   * description :- cart feature. Manage the shoping cart 
+   * input:- @value -> the object element that user select. This will come from child component 'price-card'
+   * output:- add the object and calculate total value
+   * developed by :- Amila Viduranga
+   */
   getSelectedDetails(value) {
     let availableRows = this.availableCells.length;
     let newCell = new TableCell();
@@ -65,6 +81,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /*
+   * description :- remove the element from the shoping cart
+   * input :- @itemNumber -> the item number of the selected item
+   * output:- remove the element from the cart and calculate remain total amount
+   * developed by :- Amila Viduranga
+   */
   remove(itemNumber) {
     for(let i=0; i<this.availableCells.length; i++) {
       if(this.availableCells[i].itemNumber == itemNumber) {
@@ -75,10 +97,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /*
+   * description :- load the login modal
+   * input :- @content -> id value of the modal
+   * output:- load the modal view for login
+   * developed by :- Amila Viduranga
+   */
   login(content) {
     this.modalService.open(content);
   }
 
+  /*
+   * description:- check whether the user has specific authotentication to perform changes
+   * output :- get the bearer token and grant access to perform editing values
+   * developed by :- Amila Viduranga
+   */
   loginToSystem() {
     if(this.username == null || this.password == null) {
       alert("Please provide both user name and password");
@@ -97,11 +130,22 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /*
+   * description:- load the modal view to update product
+   * output:- load the modal
+   * input :- @product -> product that going to update,  @content -> the id value of the modal
+   * developed by :- Amila Viduranga
+   */
   preUpdate(product: Product, content) {
     this.updateProduct = product;
     this.modalService.open(content);
   }
 
+  /*
+   * description :- update the product details
+   * output :- update the product
+   * developed by :- Amila Viduranga
+   */
   updateProductAction() {
     this.service.put(Statics.PRICE_UPDATE + "/" + this.updateProduct.id, true, this.updateProduct).subscribe(response => {
       this.modalService.dismissAll();

@@ -28,6 +28,11 @@ export class PriceCardComponent implements OnInit {
   ngOnInit() {
   }
 
+  /*
+   * description :- This will call to the remote servoice to calculate the price. After select element this will call
+   * output :- calculate the price
+   * developed by :- Amila Viduranga
+   */
   sendDetails() {
     let totalPrice = 0;
     this.service.post(Statics.PRICe_CALCULATE + "/" + this.itemId + "/" + this.cartonAmount + "/" + true, false, { }).subscribe(cartonResponse => {
@@ -42,7 +47,11 @@ export class PriceCardComponent implements OnInit {
             totalPrice: totalPrice
           }
           this.outputValue.emit(sendItem);
+        }, err => {
+          console.log(err);
         })
+    }, err => {
+      console.log(err);
     })
   }
   

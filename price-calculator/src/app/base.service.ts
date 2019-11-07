@@ -1,5 +1,11 @@
+/*
+ * This is the base service calling service. Here is generic implementation for any http request handle. 
+ * http methods are GET, PUT, POST, DELETE. If the request need token then consumer has to pass 'isAuthorizedRequest'  as true
+ * else consumer has to pass false. 
+ * developer :- Amila Viduranga
+ */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,7 +14,6 @@ import { Observable } from 'rxjs';
 export class BaseService {
 
   constructor(private http: HttpClient) { }
-
   get(path: any, isAuthorizedRequest: boolean): Observable<any> {
     if(isAuthorizedRequest) {
       return this.http.get(path, {
@@ -33,7 +38,7 @@ export class BaseService {
         return this.http.post(path, data);
       }
     } catch (err)  {
-      console.log(err);
+      console.log(err);isAuthorizedRequest
     }
   }
 
