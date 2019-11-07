@@ -1,6 +1,6 @@
 # 99x-Assessment
 
-## Technologies using
+## Technologies used
  - AngularJs @ Frontend
  - Java - SpringBoot @ Backend
  - MySql - Database
