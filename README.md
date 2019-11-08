@@ -25,8 +25,8 @@
 ## Setup Frontend App
  - You have to navigate into price-calculator folder
  - Then you have to run ```npm install``` in terminal (I hope you already install nodejs, if not refer the Prerequisites section).
- - Then you have to run "ng serve --aot" or  "ng serve" command
- - Then open any browser and type "http://localhost:4200" in address bar.
+ - Then you have to run ```ng serve --aot``` or  ```ng serve``` command
+ - Then open any browser and type ```http://localhost:4200``` in address bar.
  
 ## Further Details
 - This is assessment for 99x organization frontend developer possition
